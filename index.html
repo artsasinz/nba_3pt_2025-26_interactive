@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+
+    <title>NBA Stats Test</title>
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+
+  <body>
+    <div class="header">
+      <h1>NBA 2025-26 3-PT Season Stats Relationship</h1>
+
+      <div class="view-toggle">
+        <button id="playerViewButton" class="active">Player View</button>
+        <button id="teamViewButton">Team View</button>
+      </div>
+    </div>
+
+    <!-- <p>For testing. Open F12, the browser console to see the results.</p> -->
+
+    <!-- PLAYER VIEW -->
+    <div id="playerView">
+      <!-- Player Data cards -->
+      <div class="playerDataCards">
+        <div class="card">
+          <h3>Total players</h3>
+          <p id="playerCount"></p>
+        </div>
+        <div class="card">
+          <h3>League Average</h3>
+          <p id="leagueAverage"></p>
+        </div>
+        <div class="card">
+          <h3>Median Attempts</h3>
+          <p id="medianAttempts"></p>
+        </div>
+        <div class="card">
+          <h3>Median 3PT%</h3>
+          <p id="medianPercent"></p>
+        </div>
+      </div>
+
+      <!-- Drop-Down Selection Button -->
+      <div class="chart-controls">
+        <!-- X-axis Selection Button -->
+        <label for="xAxis">Select X-axis:</label>
+        <select id="xAxis">
+          <option value="FG3A" selected>3PT Attempts</option>
+          <option value="FG3M">3PT Made</option>
+          <option value="FG3_PCT">3PT Percentage</option>
+          <option value="GP">Games Played</option>
+        </select>
+
+        <!-- Y-axis Selection Button -->
+        <label for="yAxis">Select Y-axis:</label>
+        <select id="yAxis">
+          <option value="FG3A">3PT Attempts</option>
+          <option value="FG3M">3PT Made</option>
+          <option value="FG3_PCT" selected>3PT Percentage</option>
+          <option value="GP">Games Played</option>
+        </select>
+
+        <!-- PerGame-PerSeason Selection Button -->
+        <label for="playerDataMode">Data Mode:</label>
+        <select id="playerDataMode">
+          <option value="perSeason" selected>Per Season (Totals)</option>
+          <option value="perGame">Per Game (Average)</option>
+        </select>
+
+        <!-- toggle TrendLine box -->
+        <label style="margin-left: 15px; cursor: pointer;">
+          <input type="checkbox" id="togglePlayerTrendline" checked> Show Trendline
+        </label>
+      </div>
+
+      <p class="chart-subtitle">Players chart (at least 30 field goal attempts)</p>
+      <div class="chart-details-layout">
+        <!-- Players Chart -->
+        <div class="chart-container">
+          <canvas id="playerChart"></canvas>
+        </div>
+        <!-- Player's details -->
+        <div id="playerDetails">
+          <h3>Player Details</h3>
+          <p>Click a player dot to see their stats.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================== -->
+
+    <!-- TEAM VIEW -->
+    <div id="teamView" class="hidden">
+      <!-- Team Data cards -->
+      <div class="teamDataCards">
+        <div class="card">
+          <h3>Total Teams</h3>
+          <p id="teamCount"></p>
+        </div>
+        <div class="card">
+          <h3>Median Team 3PT%</h3>
+          <p id="teamMedian3PT"></p>
+        </div>
+        <div class="card">
+          <h3>Median Team Win%</h3>
+          <p id="teamMedianWinPct"></p>
+        </div>
+        <div class="card">
+          <h3>Best 3PT% Team</h3>
+          <p id="top3PTTeam"></p>
+        </div>
+      </div>
+
+      <!-- Drop-Down Selection Button -->
+      <div class="chart-controls">
+        <!-- X-axis Selection Button -->
+        <label for="teamXAxis">Select X-axis:</label>
+        <select id="teamXAxis">
+          <option value="FG3A">3PT Attempts</option>
+          <option value="FG3M">3PT Made</option>
+          <option value="FG3_PCT" selected>3PT Percentage</option>
+          <option value="W_PCT">Win Percentage</option>
+        </select>
+
+        <!-- Y-axis Selection Button -->
+        <label for="teamYAxis">Select Y-axis:</label>
+        <select id="teamYAxis">
+          <option value="FG3A">3PT Attempts</option>
+          <option value="FG3M">3PT Made</option>
+          <option value="FG3_PCT">3PT Percentage</option>
+          <option value="W_PCT" selected>Win Percentage</option>
+        </select>
+
+        <!-- PerGame-PerSeason Selection Button -->
+        <label for="teamDataMode">Data Mode:</label>
+        <select id="teamDataMode">
+          <option value="perSeason" selected>Per Season (Totals)</option>
+          <option value="perGame">Per Game (Average)</option>
+        </select>
+
+        <!-- toggle TrendLine box -->
+        <label style="margin-left: 15px; cursor: pointer;">
+          <input type="checkbox" id="toggleTeamTrendline" checked> Show Trendline
+        </label>
+      </div>
+
+      <p class="chart-subtitle">Teams chart (All 30 NBA Teams)</p>
+      <div class="chart-details-layout">
+        <!-- Teams Chart -->
+        <div class="chart-container">
+          <canvas id="teamChart"></canvas>
+        </div>
+        <!-- Team's details -->
+        <div id="teamDetails">
+          <h3>Team Details</h3>
+          <p>Click a team dot to see their stats and top 3PT contributors.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCRIPTs -->
+    <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-trendline"></script>
+    <script type="module" src="js/main.js"></script>
+  </body>
+</html>
